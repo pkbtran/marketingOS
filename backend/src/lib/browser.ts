@@ -1,6 +1,6 @@
-import puppeteer from 'puppeteer';
+const puppeteer = require('puppeteer');
 
-let browser: puppeteer.Browser | null = null;
+let browser: any = null;
 
 async function getBrowser() {
   if (!browser) {
