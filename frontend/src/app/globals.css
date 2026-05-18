@@ -495,3 +495,8 @@
         box-shadow: 0 0 0 2px rgba(59, 130, 246, 0);
     }
 }
+/* Hide Documents and Workflows sidebar links for demo */
+a[href="/documents"], a[href="/workflows"],
+a[href*="/documents"], a[href*="/workflows"] {
+  display: none !important;
+}

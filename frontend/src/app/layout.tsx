@@ -16,9 +16,9 @@ const ebGaramond = EB_Garamond({
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://app.mikeoss.com"),
-    title: "Mike - AI Legal Platform",
+    title: "marketingOS - Your AI Marketing Buddy",
     description:
-        "AI-powered legal document analysis and contract review platform.",
+        "A full fledged AI-powered marketing team",
     icons: {
         icon: [
             { url: "/icon.svg", type: "image/svg+xml" },
@@ -29,10 +29,10 @@ export const metadata: Metadata = {
     openGraph: {
         type: "website",
         url: "https://app.mikeoss.com",
-        siteName: "Mike",
-        title: "Mike - AI Legal Platform",
+        siteName: "marketingOS",
+        title: "marketingOS - Your AI Marketing Buddy",
         description:
-            "AI-powered legal document analysis and contract review platform.",
+            "A full fledged AI-powered marketing team",
         images: [
             {
                 url: "/link-image.jpg",
@@ -44,9 +44,9 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: "summary_large_image",
-        title: "Mike - AI Legal Platform",
+        title: "marketingOS - Your AI Marketing Buddy",
         description:
-            "AI-powered legal document analysis and contract review platform.",
+            "A full fledged AI-powered marketing team",
         images: ["/link-image.jpg"],
     },
 };

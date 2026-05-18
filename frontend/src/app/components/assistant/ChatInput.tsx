@@ -218,7 +218,7 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                         <textarea
                             ref={textareaRef}
                             rows={1}
-                            placeholder="Ask a question about your documents..."
+                            placeholder="Ask a marketing question or type /seo-audit https://example.com"
                             value={value}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
