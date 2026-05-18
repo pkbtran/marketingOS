@@ -34,14 +34,12 @@ export default function SignupPage() {
         setLoading(true);
         setError(null);
 
-        // Validate passwords match
         if (password !== confirmPassword) {
             setError("Passwords do not match");
             setLoading(false);
             return;
         }
 
-        // Validate password length
         if (password.length < 6) {
             setError("Password must be at least 6 characters");
             setLoading(false);
@@ -93,7 +91,7 @@ export default function SignupPage() {
         return (
             <div className="min-h-dvh bg-white flex items-start justify-center px-6 pt-32 md:pt-40 pb-10 relative">
                 <div className="absolute top-4 md:top-8 left-1/2 -translate-x-1/2">
-                    <MarketingOSLogo size="md" showText={true} />
+                    <MarketingOSLogo size={40} showText={true} />
                 </div>
                 <div className="w-full max-w-md">
                     <div className="bg-white border border-gray-200 rounded-2xl p-10 text-center shadow-sm">
@@ -116,7 +114,7 @@ export default function SignupPage() {
     return (
         <div className="min-h-dvh bg-white flex items-start justify-center px-6 pt-32 md:pt-40 pb-10 relative">
             <div className="absolute top-4 md:top-8 left-1/2 -translate-x-1/2">
-                <MarketingOSLogo size="md" showText={true} />
+                <MarketingOSLogo size={40} showText={true} />
             </div>
             <div className="w-full max-w-md">
                 <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-4">
@@ -251,7 +249,6 @@ export default function SignupPage() {
                         </Button>
                     </form>
 
-                    {/* Terms and Privacy (plain text, no links) */}
                     <div className="mt-4 text-center text-xs text-gray-500">
                         By signing up, you agree to our Terms of Use and Privacy Policy
                     </div>
