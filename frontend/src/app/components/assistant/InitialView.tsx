@@ -60,7 +60,7 @@ export function InitialView({ onSubmit }: InitialViewProps) {
                         </div>
                         <h1
                             ref={textRef}
-                            className="absolute text-4xl font-serif font-light text-gray-900 whitespace-nowrap"
+                            className="absolute text-4xl font-serif font-light text-white whitespace-nowrap"
                             style={{
                                 left: "50%",
                                 transform: loaded
