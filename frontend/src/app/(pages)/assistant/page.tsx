@@ -16,15 +16,9 @@ export default function AssistantPage() {
         if (chatId) router.push(`/assistant/chat/${chatId}`);
     }
 
-    if (messages.length === 0) {
-        return (
-            <InitialView
-                onSubmit={(message) => void handleInitialSubmit(message)}
-            />
-        );
-    }
-
-    return (
+    const content = messages.length === 0 ? (
+        <InitialView onSubmit={(message) => void handleInitialSubmit(message)} />
+    ) : (
         <ChatView
             messages={messages}
             isResponseLoading={isResponseLoading}
@@ -32,4 +26,6 @@ export default function AssistantPage() {
             cancel={cancel}
         />
     );
+
+    return <div className="bg-[#0F1426] h-full w-full">{content}</div>;
 }

@@ -157,7 +157,8 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
     return (
         <>
             <div className="w-full">
-                <div className="border border-gray-300 rounded-[16px] md:rounded-[20px] bg-white">
+                {/* Main container: dark background, light border */}
+                <div className="border border-[#374151] rounded-[16px] md:rounded-[20px] bg-[#1F2937]">
                     {/* Attached chips */}
                     {(selectedWorkflow || attachedDocs.length > 0) && (
                         <div className="flex flex-wrap gap-1.5 px-2 pt-2">
@@ -213,7 +214,7 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                         </div>
                     )}
 
-                    {/* Input */}
+                    {/* Input area */}
                     <div className="px-4 pt-4">
                         <textarea
                             ref={textareaRef}
@@ -222,11 +223,11 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                             value={value}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            className="w-full resize-none text-sm overflow-hidden border-0 text-base p-0 bg-transparent outline-none placeholder:text-gray-400 leading-6 max-h-48"
+                            className="w-full resize-none text-sm overflow-hidden border-0 text-base p-0 bg-transparent outline-none placeholder:text-gray-400 leading-6 max-h-48 text-white"
                         />
                     </div>
 
-                    {/* Controls */}
+                    {/* Controls row */}
                     <div className="flex items-center justify-between md:p-2.5 p-2">
                         <div className="flex items-center gap-1">
                             {!hideAddDocButton && (
@@ -243,7 +244,7 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                                     type="button"
                                     onClick={onProjectsClick}
                                     aria-label="Open projects"
-                                    className="flex items-center gap-1.5 rounded-lg px-2 h-8 text-sm text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+                                    className="flex items-center gap-1.5 rounded-lg px-2 h-8 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
                                 >
                                     <FolderOpen className="h-3.5 w-3.5" />
                                     <span className="hidden sm:inline">
@@ -256,7 +257,11 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                                     type="button"
                                     onClick={() => setWorkflowModalOpen(true)}
                                     aria-label="Open workflows"
-                                    className={`flex items-center gap-1.5 rounded-lg px-2 h-8 text-sm transition-colors ${selectedWorkflow ? "text-blue-600 hover:bg-blue-50" : "text-gray-400 hover:bg-gray-100 hover:text-gray-700"}`}
+                                    className={`flex items-center gap-1.5 rounded-lg px-2 h-8 text-sm transition-colors ${
+                                        selectedWorkflow
+                                            ? "text-blue-400 hover:bg-gray-700"
+                                            : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                                    }`}
                                 >
                                     {selectedWorkflow ? (
                                         <Check className="h-3.5 w-3.5" />
@@ -278,7 +283,7 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
                             />
                             <button
                                 type="button"
-                                className="relative bg-gradient-to-b from-neutral-700 to-black text-white rounded-[10px] h-8 w-8 flex items-center justify-center cursor-pointer disabled:cursor-default disabled:from-neutral-600 disabled:to-black backdrop-blur-xl border border-white/30 active:enabled:scale-95 transition-all duration-150"
+                                className="relative bg-gradient-to-b from-neutral-600 to-neutral-800 text-white rounded-[10px] h-8 w-8 flex items-center justify-center cursor-pointer disabled:cursor-default disabled:opacity-50 backdrop-blur-xl border border-white/30 active:enabled:scale-95 transition-all duration-150"
                                 onClick={handleActionClick}
                                 disabled={!isLoading && !value.trim()}
                             >
