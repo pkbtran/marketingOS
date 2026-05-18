@@ -52,87 +52,111 @@
 :root {
     --radius: 0.625rem;
     --color-azure: 0, 136, 255;
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.6 0.118 184.704);
-    --chart-3: oklch(0.398 0.07 227.392);
-    --chart-4: oklch(0.828 0.189 84.429);
-    --chart-5: oklch(0.769 0.188 70.08);
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+    --background: #0F1426;
+    --foreground: #e5e7eb;
+    --card: #1F2937;
+    --card-foreground: #f3f4f6;
+    --popover: #1F2937;
+    --popover-foreground: #f3f4f6;
+    --primary: #8B5CF6;
+    --primary-foreground: #ffffff;
+    --secondary: #374151;
+    --secondary-foreground: #f3f4f6;
+    --muted: #1F2937;
+    --muted-foreground: #9ca3af;
+    --accent: #374151;
+    --accent-foreground: #f3f4f6;
+    --destructive: #ef4444;
+    --border: #374151;
+    --input: #4B5563;
+    --ring: #8B5CF6;
+    --chart-1: #3B82F6;
+    --chart-2: #10B981;
+    --chart-3: #F59E0B;
+    --chart-4: #8B5CF6;
+    --chart-5: #EC4899;
+    --sidebar: #111827;
+    --sidebar-foreground: #f3f4f6;
+    --sidebar-primary: #8B5CF6;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #374151;
+    --sidebar-accent-foreground: #f3f4f6;
+    --sidebar-border: #374151;
+    --sidebar-ring: #8B5CF6;
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.488 0.243 264.376);
-    --chart-2: oklch(0.696 0.17 162.48);
-    --chart-3: oklch(0.769 0.188 70.08);
-    --chart-4: oklch(0.627 0.265 303.9);
-    --chart-5: oklch(0.645 0.246 16.439);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+    --background: #0F1426;
+    --foreground: #e5e7eb;
+    --card: #1F2937;
+    --card-foreground: #f3f4f6;
+    --popover: #1F2937;
+    --popover-foreground: #f3f4f6;
+    --primary: #8B5CF6;
+    --primary-foreground: #ffffff;
+    --secondary: #374151;
+    --secondary-foreground: #f3f4f6;
+    --muted: #1F2937;
+    --muted-foreground: #9ca3af;
+    --accent: #374151;
+    --accent-foreground: #f3f4f6;
+    --destructive: #ef4444;
+    --border: #374151;
+    --input: #4B5563;
+    --ring: #8B5CF6;
+    --chart-1: #3B82F6;
+    --chart-2: #10B981;
+    --chart-3: #F59E0B;
+    --chart-4: #8B5CF6;
+    --chart-5: #EC4899;
+    --sidebar: #111827;
+    --sidebar-foreground: #f3f4f6;
+    --sidebar-primary: #8B5CF6;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #374151;
+    --sidebar-accent-foreground: #f3f4f6;
+    --sidebar-border: #374151;
+    --sidebar-ring: #8B5CF6;
 }
 
 @layer base {
     * {
         @apply border-border outline-ring/50;
     }
-
     body {
         @apply bg-background text-foreground;
     }
-
     button {
         cursor: pointer;
     }
 }
 
+/* Custom overrides for dark background (inputs, placeholders, etc.) */
+input, textarea, select {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.75rem;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #8B5CF6;
+}
+
+::placeholder {
+    color: #9ca3af;
+}
+
+a {
+    color: #8B5CF6;
+}
+a:hover {
+    color: #a78bfa;
+}
+
+/* Existing utility and component styles (unchanged) */
 .usc-section {
     font-family: var(--font-serif);
     line-height: 1.6;
@@ -167,7 +191,6 @@
     margin-bottom: 1em;
 }
 
-/* Inline cross-reference links within section text */
 .usc-xref,
 .usc-section a {
     color: rgb(var(--color-azure));
@@ -181,8 +204,6 @@
     border-bottom-color: rgb(var(--color-azure));
 }
 
-/* Remove automatic list styling for USC section content */
-/* The labels are already embedded in the HTML content */
 .usc-section ol,
 .usc-section ul {
     list-style: none !important;
@@ -196,7 +217,6 @@
     padding-left: 1.25em;
 }
 
-/* Add indentation for nested lists */
 .usc-section ol ol,
 .usc-section ol ul,
 .usc-section ul ol {
@@ -204,7 +224,6 @@
     margin-top: 0;
 }
 
-/* ─── CFR (Code of Federal Regulations) ────────────────────────── */
 .cfr-section {
     font-family: var(--font-serif);
     line-height: 1.6;
@@ -331,7 +350,6 @@
     }
 }
 
-/* ─── Tiptap WYSIWYG workflow editor ────────────────────────────── */
 .workflow-editor-content {
     min-height: 100%;
     padding: 1rem 1.25rem;
@@ -409,9 +427,6 @@
     font-style: italic;
 }
 
-/* ChatBox Animation Styles */
-
-/* PDF text layer */
 .pdf-text-layer {
     overflow: hidden;
     opacity: 1;
@@ -442,7 +457,6 @@
     color: inherit !important;
 }
 
-/* docx-preview tracked-change styling */
 .docx-view-container ins {
     color: #16a34a;
     text-decoration: none;
@@ -455,8 +469,6 @@
     background-color: rgba(220, 38, 38, 0.08);
 }
 
-/* Kill docx-preview's default dark-gray wrapper chrome — let the scroll
-   container's own bg show through. */
 .docx-view-container .docx-wrapper {
     background: transparent !important;
     padding: 0 !important;
@@ -472,8 +484,6 @@
     border-radius: 2px;
 }
 
-/* Optimistic Accept/Reject: instantly hide rejected side / de-style kept side.
-   These are ephemeral DOM mutations; the real re-render replaces the markup. */
 .docx-view-container .docx-edit-hidden {
     display: none !important;
 }
@@ -495,6 +505,7 @@
         box-shadow: 0 0 0 2px rgba(59, 130, 246, 0);
     }
 }
+
 /* Hide Documents and Workflows sidebar links for demo */
 a[href="/documents"], a[href="/workflows"],
 a[href*="/documents"], a[href*="/workflows"] {

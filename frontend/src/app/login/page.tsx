@@ -6,8 +6,9 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { SiteLogo } from "@/components/site-logo";
+import { MarketingOSLogo } from "@/components/marketingos-logo";
 import { useAuth } from "@/contexts/AuthContext";
+
 export default function LoginPage() {
     const router = useRouter();
     const { isAuthenticated, authLoading } = useAuth();
@@ -46,7 +47,7 @@ export default function LoginPage() {
     return (
         <div className="min-h-dvh bg-white flex items-start justify-center px-6 pt-32 md:pt-40 pb-10 relative">
             <div className="absolute top-4 md:top-8 left-1/2 -translate-x-1/2">
-                <SiteLogo size="md" className="md:text-4xl" asLink />
+                <MarketingOSLogo size={40} showText={true} />
             </div>
             <div className="w-full max-w-md">
                 {/* Login Form */}
@@ -120,10 +121,8 @@ export default function LoginPage() {
                     </form>
                 </div>
                 <p className="text-center text-xs text-gray-500 leading-relaxed px-2">
-                    Mike hosted on MikeOSS.com is currently a demo service.
-                    Please do not upload, submit, or store sensitive,
-                    confidential, privileged, client, or personally
-                    identifiable documents.
+                    marketingOS is currently a demo product. Please do not upload, submit, or store sensitive,
+                    confidential, privileged, client, or personally identifiable documents.
                 </p>
             </div>
         </div>

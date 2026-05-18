@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import { SiteLogo } from "@/components/site-logo";
+import { MarketingOSLogo } from "@/components/marketingos-logo";
 import { CheckCircle2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { updateUserProfile } from "@/app/lib/mikeApi";
@@ -93,7 +93,7 @@ export default function SignupPage() {
         return (
             <div className="min-h-dvh bg-white flex items-start justify-center px-6 pt-32 md:pt-40 pb-10 relative">
                 <div className="absolute top-4 md:top-8 left-1/2 -translate-x-1/2">
-                    <SiteLogo size="md" className="md:text-4xl" asLink />
+                    <MarketingOSLogo size="md" showText={true} />
                 </div>
                 <div className="w-full max-w-md">
                     <div className="bg-white border border-gray-200 rounded-2xl p-10 text-center shadow-sm">
@@ -116,7 +116,7 @@ export default function SignupPage() {
     return (
         <div className="min-h-dvh bg-white flex items-start justify-center px-6 pt-32 md:pt-40 pb-10 relative">
             <div className="absolute top-4 md:top-8 left-1/2 -translate-x-1/2">
-                <SiteLogo size="md" className="md:text-4xl" asLink />
+                <MarketingOSLogo size="md" showText={true} />
             </div>
             <div className="w-full max-w-md">
                 <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-4">
@@ -251,33 +251,14 @@ export default function SignupPage() {
                         </Button>
                     </form>
 
-                    {/* Terms and Privacy */}
+                    {/* Terms and Privacy (plain text, no links) */}
                     <div className="mt-4 text-center text-xs text-gray-500">
-                        By signing up, you agree to our{" "}
-                        <Link
-                            href="https://mikeoss.com/terms"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline"
-                        >
-                            Terms of Use
-                        </Link>{" "}
-                        and{" "}
-                        <Link
-                            href="https://mikeoss.com/privacy"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline"
-                        >
-                            Privacy Policy
-                        </Link>
+                        By signing up, you agree to our Terms of Use and Privacy Policy
                     </div>
                 </div>
                 <p className="text-center text-xs text-gray-500 leading-relaxed px-2">
-                    Mike hosted on MikeOSS.com is currently a demo service.
-                    Please do not upload, submit, or store sensitive,
-                    confidential, privileged, client, or personally identifiable
-                    documents.
+                    marketingOS is currently a demo product. Please do not upload, submit, or store sensitive,
+                    confidential, privileged, client, or personally identifiable documents.
                 </p>
             </div>
         </div>
