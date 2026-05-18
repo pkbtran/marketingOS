@@ -1,10 +1,10 @@
 import Image from 'next/image';
 
-export function MarketingOSLogo({ size = 32, showText = true }: { size?: number; showText?: boolean }) {
+export function MarketingOSLogo({ size = 32, showText = false }: { size?: number; showText?: boolean }) {
   return (
     <div className="flex items-center gap-2">
       <Image
-        src="/logo.jpg"
+        src="/logo.png"
         alt="MarketingOS Logo"
         width={size}
         height={size}

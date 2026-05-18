@@ -47,7 +47,7 @@ export default function LoginPage() {
     return (
         <div className="min-h-dvh bg-[#0F1426] flex items-start justify-center px-6 pt-32 md:pt-40 pb-10 relative">
             <div className="absolute top-4 md:top-8 left-1/2 -translate-x-1/2">
-                <MarketingOSLogo size={64} showText={true} />
+                <MarketingOSLogo size={64} showText={false} />
             </div>
             <div className="w-full max-w-md">
                 <div className="bg-[#1F2937] border border-[#374151] rounded-2xl p-8 mb-4 shadow-xl">

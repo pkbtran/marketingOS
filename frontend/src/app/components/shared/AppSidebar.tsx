@@ -127,7 +127,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                             href="/assistant"
                             className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
                         >
-                            <MarketingOSLogo size={22} showText={true} />
+                            <MarketingOSLogo size={32} showText={true} />
                         </Link>
                     </div>
                 )}
