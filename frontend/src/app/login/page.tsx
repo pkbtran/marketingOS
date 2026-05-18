@@ -39,7 +39,7 @@ export default function LoginPage() {
     return (
         <div className="min-h-dvh bg-[#0F1426] flex flex-col items-center justify-center px-6 py-10">
             <div className="mb-12">
-                <MarketingOSLogo size={120} showText={false} />
+                <MarketingOSLogo size={200} showText={false} />
             </div>
             <div className="w-full max-w-md">
                 <div className="bg-[#1F2937] border border-[#374151] rounded-2xl p-8 shadow-xl">
