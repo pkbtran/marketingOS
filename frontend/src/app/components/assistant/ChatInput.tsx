@@ -222,14 +222,14 @@ export const ChatInput = forwardRef<ChatInputHandle, Props>(function ChatInput(
 
                     {/* Input */}
                     <div className="px-4 pt-4">
-                        <textarea
+                       <textarea
                             ref={textareaRef}
                             rows={1}
                             placeholder="Ask a marketing question or type /seo-audit https://example.com"
                             value={value}
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
-                            className="w-full resize-none text-sm overflow-hidden border-0 text-base p-0 bg-transparent outline-none placeholder:text-gray-400 leading-6 max-h-48"
+                            className="w-full resize-none text-sm overflow-hidden border-0 text-base p-0 bg-transparent outline-none placeholder:text-gray-400 leading-6 max-h-48 text-gray-900 font-medium"
                         />
                     </div>
 
