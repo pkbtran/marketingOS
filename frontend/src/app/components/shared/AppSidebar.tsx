@@ -23,7 +23,7 @@ import { listProjects } from "@/app/lib/mikeApi";
 const NAV_ITEMS = [
     { href: "/assistant", label: "Assistant", icon: MessageSquare },
     { href: "/projects", label: "Projects", icon: FolderOpen },
-    { href: "/tabular-reviews", label: "Tabular Review", icon: Table2 },
+    // { href: "/tabular-reviews", label: "Tabular Review", icon: Table2 },   // ← hidden for marketing AI
     { href: "/workflows", label: "Marketing Workflows", icon: Library },
 ];
 
@@ -41,7 +41,9 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
     const [shouldAnimate, setShouldAnimate] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [historyCollapsed, setHistoryCollapsed] = useState(false);
-    const [projectNames, setProjectNames] = useState<Record<string, string>>({});
+    const [projectNames, setProjectNames] = useState<Record<string, string>>(
+        {},
+    );
 
     useEffect(() => {
         if (!user) return;
@@ -62,7 +64,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
         const handleClickOutside = () => setIsDropdownOpen(false);
         if (isDropdownOpen) {
             document.addEventListener("click", handleClickOutside);
-            return () => document.removeEventListener("click", handleClickOutside);
+            return () =>
+                document.removeEventListener("click", handleClickOutside);
         }
     }, [isDropdownOpen]);
 
@@ -72,18 +75,23 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
             setCurrentChatId(chatId);
             return;
         }
-        const projectChatMatch = pathname.match(/^\/projects\/[^/]+\/assistant\/chat\/([^/]+)/);
+
+        const projectChatMatch = pathname.match(
+            /^\/projects\/[^/]+\/assistant\/chat\/([^/]+)/,
+        );
         if (projectChatMatch) {
             setCurrentChatId(projectChatMatch[1]);
             return;
         }
+
         if (pathname === "/assistant") {
             setCurrentChatId(null);
         }
     }, [pathname, setCurrentChatId]);
 
     const getUserInitials = (email: string) => {
-        if (profile?.displayName) return profile.displayName.charAt(0).toUpperCase();
+        if (profile?.displayName)
+            return profile.displayName.charAt(0).toUpperCase();
         return email.charAt(0).toUpperCase();
     };
 
@@ -119,7 +127,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                             href="/assistant"
                             className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
                         >
-                            <MarketingOSLogo size={160} showText={false} />
+                            <MarketingOSLogo size={56} showText={false} />
                         </Link>
                     </div>
                 )}
@@ -134,7 +142,8 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
 
             {/* Nav items */}
             {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-                const isActive = pathname === href || pathname.startsWith(href + "/");
+                const isActive =
+                    pathname === href || pathname.startsWith(href + "/");
                 return (
                     <div key={href} className="py-1 px-2.5">
                         <button
@@ -219,7 +228,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
                                             router.push(
                                                 chat.project_id
                                                     ? `/projects/${chat.project_id}/assistant/chat/${chat.id}`
-                                                    : `/assistant/chat/${chat.id}`
+                                                    : `/assistant/chat/${chat.id}`,
                                             );
                                         }}
                                     />
