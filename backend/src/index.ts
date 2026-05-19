@@ -13,7 +13,7 @@ import { userRouter } from "./routes/user";
 import { downloadsRouter } from "./routes/downloads";
 
 const app = express();
-const PORT = process.env.PORT ?? 3001;
+const PORT = Number(process.env.PORT) || 3001;
 const isProduction = process.env.NODE_ENV === "production";
 
 function envInt(name: string, fallback: number): number {
