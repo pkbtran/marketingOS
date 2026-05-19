@@ -276,6 +276,7 @@ export interface MikeWorkflow {
   id: string;
   user_id: string | null;
   title: string;
+  description?: string;          // <-- ADDED for marketing workflows
   type: "assistant" | "tabular";
   prompt_md: string | null;
   columns_config: ColumnConfig[] | null;
