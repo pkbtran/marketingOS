@@ -3,6 +3,7 @@ export const BUILT_IN_IDS = new Set([
     "competitive-content",
     "seo-growth",
     "lead-gen-outreach",
+    "campaign-launch",
 ]);
 
 export const BUILT_IN_WORKFLOWS = [
@@ -12,6 +13,10 @@ export const BUILT_IN_WORKFLOWS = [
         description: "Profile competitors and create a content strategy to outrank them.",
         type: "assistant",
         practice: "Content Strategy",
+        user_id: null,
+        columns_config: [],
+        is_system: true,
+        created_at: new Date().toISOString(),
         prompt_md: `You are a marketing strategist. Follow these steps precisely.
 
 ## Step 1: Competitor Profiling
@@ -40,6 +45,10 @@ Execute both steps in order. Keep responses concise.`,
         description: "Audit website SEO and plan programmatic pages for local keywords.",
         type: "assistant",
         practice: "SEO",
+        user_id: null,
+        columns_config: [],
+        is_system: true,
+        created_at: new Date().toISOString(),
         prompt_md: `You are an SEO expert. Follow these steps.
 
 ## Step 1: SEO Audit
@@ -68,6 +77,10 @@ Execute both steps.`,
         description: "Create a lead magnet and a cold email sequence to generate leads.",
         type: "assistant",
         practice: "Lead Generation",
+        user_id: null,
+        columns_config: [],
+        is_system: true,
+        created_at: new Date().toISOString(),
         prompt_md: `You are a lead generation expert. Follow these steps.
 
 ## Step 1: Lead Magnet Design
@@ -87,13 +100,17 @@ Each email: subject line, body (<150 words), CTA.
 
 Execute both steps.`,
     },
-{
-    id: "campaign-launch",
-    title: "🚀 Full Campaign Launch",
-    description: "Define product context, generate ideas, ad creative, and A/B test plan.",
-    type: "assistant",
-    practice: "Campaigns",
-    prompt_md: `You are a marketing campaign specialist. Follow these steps in order.
+    {
+        id: "campaign-launch",
+        title: "🚀 Full Campaign Launch",
+        description: "Define product context, generate ideas, ad creative, and A/B test plan.",
+        type: "assistant",
+        practice: "Campaigns",
+        user_id: null,
+        columns_config: [],
+        is_system: true,
+        created_at: new Date().toISOString(),
+        prompt_md: `You are a marketing campaign specialist. Follow these steps in order.
 
 ## Step 1: Product Marketing Context
 Ask the user:
@@ -127,6 +144,6 @@ Propose a simple A/B test:
 
 Output a short plan.
 
-Execute all steps. If the user does not provide context, ask for it before proceeding.`
-}
+Execute all steps. If the user does not provide context, ask for it before proceeding.`,
+    },
 ];
