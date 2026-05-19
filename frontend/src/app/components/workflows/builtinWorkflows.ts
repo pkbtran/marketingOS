@@ -1,23 +1,41 @@
+import type { MikeWorkflow } from "../shared/types";
+
 // Built‑in marketing workflows (linked skills)
-export const BUILT_IN_IDS = new Set([
+export const BUILT_IN_IDS = new Set<string>([
     "competitive-content",
     "seo-growth",
     "lead-gen-outreach",
     "campaign-launch",
 ]);
 
-export const BUILT_IN_WORKFLOWS = [
-    {
-        id: "competitive-content",
-        title: "🏆 Competitive Content Workflow",
-        description: "Profile competitors and create a content strategy to outrank them.",
-        type: "assistant",
-        practice: "Content Strategy",
-        user_id: null,
-        columns_config: [],
-        is_system: true,
-        created_at: new Date().toISOString(),
-        prompt_md: `You are a marketing strategist. Follow these steps precisely.
+// Helper to create a workflow object with the correct literal type
+const createWorkflow = (
+    id: string,
+    title: string,
+    description: string,
+    practice: string,
+    prompt_md: string,
+    type: "assistant" | "tabular" = "assistant"
+): MikeWorkflow => ({
+    id,
+    title,
+    description,
+    type,
+    practice,
+    user_id: null,
+    columns_config: [],
+    is_system: true,
+    created_at: new Date().toISOString(),
+    prompt_md,
+});
+
+export const BUILT_IN_WORKFLOWS: MikeWorkflow[] = [
+    createWorkflow(
+        "competitive-content",
+        "🏆 Competitive Content Workflow",
+        "Profile competitors and create a content strategy to outrank them.",
+        "Content Strategy",
+        `You are a marketing strategist. Follow these steps precisely.
 
 ## Step 1: Competitor Profiling
 Ask the user for 2-3 competitor URLs (local architects in Hong Kong). For each, analyze:
@@ -37,19 +55,14 @@ Based on the gaps identified, propose a 30‑day content plan:
 
 End with a clear summary: "What to create first and why."
 
-Execute both steps in order. Keep responses concise.`,
-    },
-    {
-        id: "seo-growth",
-        title: "📈 SEO Growth Workflow",
-        description: "Audit website SEO and plan programmatic pages for local keywords.",
-        type: "assistant",
-        practice: "SEO",
-        user_id: null,
-        columns_config: [],
-        is_system: true,
-        created_at: new Date().toISOString(),
-        prompt_md: `You are an SEO expert. Follow these steps.
+Execute both steps in order. Keep responses concise.`
+    ),
+    createWorkflow(
+        "seo-growth",
+        "📈 SEO Growth Workflow",
+        "Audit website SEO and plan programmatic pages for local keywords.",
+        "SEO",
+        `You are an SEO expert. Follow these steps.
 
 ## Step 1: SEO Audit
 Ask the user for their website URL. Analyze:
@@ -69,19 +82,14 @@ Based on the audit and the user's location (Hong Kong), propose a programmatic S
 
 Include a sample page outline.
 
-Execute both steps.`,
-    },
-    {
-        id: "lead-gen-outreach",
-        title: "📧 Lead Gen Outreach Workflow",
-        description: "Create a lead magnet and a cold email sequence to generate leads.",
-        type: "assistant",
-        practice: "Lead Generation",
-        user_id: null,
-        columns_config: [],
-        is_system: true,
-        created_at: new Date().toISOString(),
-        prompt_md: `You are a lead generation expert. Follow these steps.
+Execute both steps.`
+    ),
+    createWorkflow(
+        "lead-gen-outreach",
+        "📧 Lead Gen Outreach Workflow",
+        "Create a lead magnet and a cold email sequence to generate leads.",
+        "Lead Generation",
+        `You are a lead generation expert. Follow these steps.
 
 ## Step 1: Lead Magnet Design
 Ask the user about their target audience (e.g., real estate agents, developers, homeowners). Create a lead magnet:
@@ -98,19 +106,14 @@ Based on the lead magnet, write a 3‑email sequence to reach potential clients:
 
 Each email: subject line, body (<150 words), CTA.
 
-Execute both steps.`,
-    },
-    {
-        id: "campaign-launch",
-        title: "🚀 Full Campaign Launch",
-        description: "Define product context, generate ideas, ad creative, and A/B test plan.",
-        type: "assistant",
-        practice: "Campaigns",
-        user_id: null,
-        columns_config: [],
-        is_system: true,
-        created_at: new Date().toISOString(),
-        prompt_md: `You are a marketing campaign specialist. Follow these steps in order.
+Execute both steps.`
+    ),
+    createWorkflow(
+        "campaign-launch",
+        "🚀 Full Campaign Launch",
+        "Define product context, generate ideas, ad creative, and A/B test plan.",
+        "Campaigns",
+        `You are a marketing campaign specialist. Follow these steps in order.
 
 ## Step 1: Product Marketing Context
 Ask the user:
@@ -144,6 +147,6 @@ Propose a simple A/B test:
 
 Output a short plan.
 
-Execute all steps. If the user does not provide context, ask for it before proceeding.`,
-    },
+Execute all steps. If the user does not provide context, ask for it before proceeding.`
+    ),
 ];
