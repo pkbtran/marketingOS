@@ -37,3 +37,13 @@ export function isModelAvailable(modelId: string, apiKeys?: ApiKeyState): boolea
     if (provider === "openai") return !!apiKeys.openai?.configured;
     return false;
 }
+
+export function providerLabel(provider: ModelProvider): string {
+    switch (provider) {
+        case "claude": return "Anthropic (Claude)";
+        case "gemini": return "Google (Gemini)";
+        case "openai": return "OpenAI";
+        case "ollama": return "Ollama";
+        default: return provider;
+    }
+}

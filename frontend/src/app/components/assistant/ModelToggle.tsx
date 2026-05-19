@@ -21,11 +21,14 @@ const DEFAULT_MODELS: ModelOption[] = [
     { id: "ollama", label: "Ollama (Local)", group: "Local" },
 ];
 
+export const DEFAULT_MODEL_ID = "claude-sonnet-4-6";
+export const ALLOWED_MODEL_IDS = DEFAULT_MODELS.map(m => m.id);
+
 interface Props {
     value: string;
     onChange: (id: string) => void;
     apiKeys?: ApiKeyState;
-    customModels?: ModelOption[]; // models with group = "Custom"
+    customModels?: ModelOption[];
 }
 
 export function ModelToggle({ value, onChange, apiKeys, customModels = [] }: Props) {
