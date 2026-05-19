@@ -1,14 +1,15 @@
+// frontend/src/app/(pages)/layout.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Menu } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { ChatHistoryProvider } from "@/app/contexts/ChatHistoryContext";
 import { SidebarContext } from "@/app/contexts/SidebarContext";
 import { AppSidebar } from "@/app/components/shared/AppSidebar";
+import { Menu } from "lucide-react";
 
-export default function MikeLayout({
+export default function PagesLayout({
     children,
 }: {
     children: React.ReactNode;
@@ -35,7 +36,7 @@ export default function MikeLayout({
         if (typeof window !== "undefined" && window.innerWidth >= 768) {
             localStorage.setItem("sidebarOpen", isSidebarOpen.toString());
         }
-    }, [isSidebarOpenDesktop]);
+    }, [isSidebarOpen]);
 
     useEffect(() => {
         if (typeof window === "undefined") return;
@@ -66,7 +67,7 @@ export default function MikeLayout({
 
     if (authLoading) {
         return (
-            <div className="flex h-screen items-center justify-center">
+            <div className="flex h-screen items-center justify-center bg-[#0F1426]">
                 <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-gray-700" />
             </div>
         );
@@ -79,23 +80,23 @@ export default function MikeLayout({
             <SidebarContext.Provider
                 value={{ setSidebarOpen: (open) => { setIsSidebarOpen(open); setIsSidebarOpenDesktop(open); } }}
             >
-                <div className="h-dvh bg-white flex flex-col">
+                <div className="h-dvh bg-[#0F1426] flex flex-col">
                     <div className="flex-1 flex overflow-hidden">
                         <AppSidebar
                             isOpen={isSidebarOpen}
                             onToggle={handleSidebarToggle}
                         />
-                        <div className="flex-1 flex flex-col h-dvh md:overflow-hidden relative w-full">
+                        <div className="flex-1 flex flex-col h-dvh md:overflow-hidden relative w-full bg-[#0F1426]">
                             {/* Mobile header */}
-                            <div className="flex md:hidden items-center gap-3 px-4 py-3 border-b border-gray-100 shrink-0">
+                            <div className="flex md:hidden items-center gap-3 px-4 py-3 border-b border-[#374151] shrink-0">
                                 <button
                                     onClick={handleSidebarToggle}
-                                    className="flex items-center justify-center w-8 h-8 rounded hover:bg-gray-100 text-gray-500 transition-colors"
+                                    className="flex items-center justify-center w-8 h-8 rounded hover:bg-[#1F2937] text-gray-300 transition-colors"
                                 >
                                     <Menu className="h-5 w-5" />
                                 </button>
                             </div>
-                            <main className="flex-1 overflow-y-auto md:overflow-hidden w-full h-full">
+                            <main className="flex-1 overflow-y-auto md:overflow-hidden w-full h-full bg-[#0F1426]">
                                 {children}
                             </main>
                         </div>
