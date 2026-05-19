@@ -26,7 +26,7 @@ function getApiKeyStatus(userApiKeys: Record<string, string> | null | undefined)
 // GET /user/profile
 router.get("/profile", requireAuth, async (req, res) => {
     const db = createServerSupabase();
-    const userId = req.user.id;
+    const userId = (req as any).user.id;
 
     const { data: profile, error } = await db
         .from("user_profiles")
@@ -65,7 +65,7 @@ const updateProfileSchema = z.object({
 
 router.patch("/profile", requireAuth, async (req, res) => {
     const db = createServerSupabase();
-    const userId = req.user.id;
+    const userId = (req as any).user.id;
     const parsed = updateProfileSchema.safeParse(req.body);
     if (!parsed.success) {
         return res.status(400).json({ error: "Invalid request body" });
@@ -119,7 +119,7 @@ router.patch("/profile", requireAuth, async (req, res) => {
 // DELETE /user/account
 router.delete("/account", requireAuth, async (req, res) => {
     const db = createServerSupabase();
-    const userId = req.user.id;
+    const userId = (req as any).user.id;
 
     const { error } = await db.auth.admin.deleteUser(userId);
     if (error) {
@@ -129,4 +129,6 @@ router.delete("/account", requireAuth, async (req, res) => {
     res.status(204).send();
 });
 
+// Named export for compatibility with index.ts
+export const userRouter = router;
 export default router;
