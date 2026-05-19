@@ -117,10 +117,15 @@ export async function updateUserProfile(payload: {
     organisation?: string | null;
     tabularModel?: string;
 }): Promise<UserProfile> {
+    // Convert displayName to display_name for the backend
+    const backendPayload: { display_name?: string | null; organisation?: string | null; tabularModel?: string } = {};
+    if (payload.displayName !== undefined) backendPayload.display_name = payload.displayName;
+    if (payload.organisation !== undefined) backendPayload.organisation = payload.organisation;
+    if (payload.tabularModel !== undefined) backendPayload.tabularModel = payload.tabularModel;
     return apiRequest<UserProfile>("/user/profile", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(backendPayload),
     });
 }
 
