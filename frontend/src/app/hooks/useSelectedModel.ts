@@ -1,31 +1,33 @@
-"use client";
-
 import { useCallback, useEffect, useState } from "react";
 import { ALLOWED_MODEL_IDS, DEFAULT_MODEL_ID } from "../components/assistant/ModelToggle";
 
 const STORAGE_KEY = "mike.selectedModel";
 
 function readStored(): string {
-    if (typeof window === "undefined") return DEFAULT_MODEL_ID;
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (raw && ALLOWED_MODEL_IDS.has(raw)) return raw;
-    return DEFAULT_MODEL_ID;
+  if (typeof window === "undefined") return DEFAULT_MODEL_ID;
+  const raw = window.localStorage.getItem(STORAGE_KEY);
+  if (raw && ALLOWED_MODEL_IDS.includes(raw)) return raw;
+  return DEFAULT_MODEL_ID;
+}
+
+function writeStored(modelId: string) {
+  if (typeof window === "undefined") return;
+  window.localStorage.setItem(STORAGE_KEY, modelId);
 }
 
 export function useSelectedModel(): [string, (id: string) => void] {
-    const [model, setModelState] = useState<string>(DEFAULT_MODEL_ID);
+  const [model, setModel] = useState<string>(DEFAULT_MODEL_ID);
 
-    useEffect(() => {
-        setModelState(readStored());
-    }, []);
+  useEffect(() => {
+    setModel(readStored());
+  }, []);
 
-    const setModel = useCallback((id: string) => {
-        const next = ALLOWED_MODEL_IDS.has(id) ? id : DEFAULT_MODEL_ID;
-        setModelState(next);
-        if (typeof window !== "undefined") {
-            window.localStorage.setItem(STORAGE_KEY, next);
-        }
-    }, []);
+  const setSelectedModel = useCallback((id: string) => {
+    if (ALLOWED_MODEL_IDS.includes(id)) {
+      setModel(id);
+      writeStored(id);
+    }
+  }, []);
 
-    return [model, setModel];
+  return [model, setSelectedModel];
 }
