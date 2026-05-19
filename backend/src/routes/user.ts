@@ -1,263 +1,132 @@
 import { Router } from "express";
-import { requireAuth } from "../middleware/auth";
 import { createServerSupabase } from "../lib/supabase";
-import { DEFAULT_TABULAR_MODEL, resolveModel } from "../lib/llm";
-import {
-  type ApiKeyStatus,
-  getUserApiKeyStatus,
-  hasEnvApiKey,
-  normalizeApiKeyProvider,
-  saveUserApiKey,
-} from "../lib/userApiKeys";
+import { requireAuth } from "../middleware/auth";
+import { z } from "zod";
 
-export const userRouter = Router();
+const router = Router();
 
-const MONTHLY_CREDIT_LIMIT = 999999;
-
-type UserProfileRow = {
-  display_name: string | null;
-  organisation: string | null;
-  message_credits_used: number;
-  credits_reset_date: string;
-  tier: string;
-  tabular_model: string;
-};
-
-function serializeProfile(
-  row: UserProfileRow,
-  apiKeyStatus?: ApiKeyStatus,
-) {
-  const creditsUsed = row.message_credits_used ?? 0;
-  return {
-    displayName: row.display_name,
-    organisation: row.organisation,
-    messageCreditsUsed: creditsUsed,
-    creditsResetDate: row.credits_reset_date,
-    creditsRemaining: Math.max(MONTHLY_CREDIT_LIMIT - creditsUsed, 0),
-    tier: row.tier || "Free",
-    tabularModel: resolveModel(row.tabular_model, DEFAULT_TABULAR_MODEL),
-    ...(apiKeyStatus ? { apiKeyStatus } : {}),
-  };
+// Helper to check API key status
+function getApiKeyStatus(userApiKeys: Record<string, string> | null | undefined) {
+    const providers = ["claude", "gemini", "openai"] as const;
+    const status: Record<string, { configured: boolean; source: "user" | "env" | null }> = {};
+    for (const p of providers) {
+        const envKey = process.env[`${p.toUpperCase()}_API_KEY`];
+        const userKey = userApiKeys?.[p];
+        if (userKey) {
+            status[p] = { configured: true, source: "user" };
+        } else if (envKey) {
+            status[p] = { configured: true, source: "env" };
+        } else {
+            status[p] = { configured: false, source: null };
+        }
+    }
+    return status;
 }
-
-function validateProfilePayload(body: unknown):
-  | {
-      ok: true;
-      update: {
-        display_name?: string | null;
-        organisation?: string | null;
-        tabular_model?: string;
-        updated_at: string;
-      };
-    }
-  | { ok: false; detail: string } {
-  if (!body || typeof body !== "object" || Array.isArray(body)) {
-    return { ok: false, detail: "Expected a JSON object" };
-  }
-
-  const raw = body as Record<string, unknown>;
-  const allowedFields = new Set([
-    "displayName",
-    "organisation",
-    "tabularModel",
-  ]);
-  const invalidField = Object.keys(raw).find((key) => !allowedFields.has(key));
-  if (invalidField) {
-    return { ok: false, detail: `Unsupported profile field: ${invalidField}` };
-  }
-
-  const update: {
-    display_name?: string | null;
-    organisation?: string | null;
-    tabular_model?: string;
-    updated_at: string;
-  } = { updated_at: new Date().toISOString() };
-
-  if ("displayName" in raw) {
-    if (raw.displayName !== null && typeof raw.displayName !== "string") {
-      return { ok: false, detail: "displayName must be a string or null" };
-    }
-    update.display_name = raw.displayName?.trim() || null;
-  }
-
-  if ("organisation" in raw) {
-    if (raw.organisation !== null && typeof raw.organisation !== "string") {
-      return { ok: false, detail: "organisation must be a string or null" };
-    }
-    update.organisation = raw.organisation?.trim() || null;
-  }
-
-  if ("tabularModel" in raw) {
-    if (typeof raw.tabularModel !== "string") {
-      return { ok: false, detail: "tabularModel must be a string" };
-    }
-    const resolved = resolveModel(raw.tabularModel, "");
-    if (!resolved) {
-      return { ok: false, detail: "Unsupported tabularModel" };
-    }
-    update.tabular_model = resolved;
-  }
-
-  return { ok: true, update };
-}
-
-async function ensureProfileRow(
-  db: ReturnType<typeof createServerSupabase>,
-  userId: string,
-) {
-  const { error } = await db
-    .from("user_profiles")
-    .upsert(
-      { user_id: userId },
-      { onConflict: "user_id", ignoreDuplicates: true },
-    );
-  return error;
-}
-
-async function loadProfile(
-  db: ReturnType<typeof createServerSupabase>,
-  userId: string,
-  options: { repairMissing?: boolean } = {},
-) {
-  let { data, error } = await db
-    .from("user_profiles")
-    .select(
-      "display_name, organisation, message_credits_used, credits_reset_date, tier, tabular_model",
-    )
-    .eq("user_id", userId)
-    .maybeSingle();
-
-  if (error) return { data: null, error };
-  if (!data) {
-    if (!options.repairMissing) {
-      return { data: null, error: new Error("Profile not found") };
-    }
-
-    const ensureError = await ensureProfileRow(db, userId);
-    if (ensureError) return { data: null, error: ensureError };
-
-    const created = await db
-      .from("user_profiles")
-      .select(
-        "display_name, organisation, message_credits_used, credits_reset_date, tier, tabular_model",
-      )
-      .eq("user_id", userId)
-      .single();
-    if (created.error) return { data: null, error: created.error };
-    data = created.data;
-  }
-
-  let row = data as UserProfileRow;
-  if (row.credits_reset_date && new Date() > new Date(row.credits_reset_date)) {
-    const creditsResetDate = new Date();
-    creditsResetDate.setDate(creditsResetDate.getDate() + 30);
-    const { data: resetData, error: resetError } = await db
-      .from("user_profiles")
-      .update({
-        message_credits_used: 0,
-        credits_reset_date: creditsResetDate.toISOString(),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("user_id", userId)
-      .select(
-        "display_name, organisation, message_credits_used, credits_reset_date, tier, tabular_model",
-      )
-      .single();
-
-    if (resetError) return { data: null, error: resetError };
-    row = resetData as UserProfileRow;
-  }
-
-  return { data: serializeProfile(row), error: null };
-}
-
-// POST /user/profile
-userRouter.post("/profile", requireAuth, async (_req, res) => {
-  const userId = res.locals.userId as string;
-  const db = createServerSupabase();
-  const error = await ensureProfileRow(db, userId);
-  if (error) return void res.status(500).json({ detail: error.message });
-  res.json({ ok: true });
-});
 
 // GET /user/profile
-userRouter.get("/profile", requireAuth, async (_req, res) => {
-  const userId = res.locals.userId as string;
-  const db = createServerSupabase();
-  const { data, error } = await loadProfile(db, userId, {
-    repairMissing: true,
-  });
-  if (error) return void res.status(500).json({ detail: error.message });
-  const apiKeyStatus = await getUserApiKeyStatus(userId, db);
-  res.json({ ...data, apiKeyStatus });
+router.get("/profile", requireAuth, async (req, res) => {
+    const db = createServerSupabase();
+    const userId = req.user.id;
+
+    const { data: profile, error } = await db
+        .from("user_profiles")
+        .select("display_name, organisation, message_credits_used, credits_reset_date, tier, tabular_model, api_keys")
+        .eq("user_id", userId)
+        .single();
+
+    if (error && error.code !== "PGRST116") {
+        return res.status(500).json({ error: "Failed to fetch profile" });
+    }
+
+    const creditsRemaining = 1000 - (profile?.message_credits_used ?? 0);
+    const apiKeyStatus = getApiKeyStatus(profile?.api_keys);
+
+    res.json({
+        displayName: profile?.display_name ?? null,
+        organisation: profile?.organisation ?? null,
+        messageCreditsUsed: profile?.message_credits_used ?? 0,
+        creditsResetDate: profile?.credits_reset_date ?? null,
+        creditsRemaining: creditsRemaining < 0 ? 0 : creditsRemaining,
+        tier: profile?.tier ?? "Free",
+        tabularModel: profile?.tabular_model ?? "gemini-3-flash-preview",
+        apiKeyStatus,
+    });
 });
 
 // PATCH /user/profile
-userRouter.patch("/profile", requireAuth, async (req, res) => {
-  const userId = res.locals.userId as string;
-  const parsed = validateProfilePayload(req.body);
-  if (!parsed.ok) return void res.status(400).json({ detail: parsed.detail });
-
-  const db = createServerSupabase();
-  const ensureError = await ensureProfileRow(db, userId);
-  if (ensureError)
-    return void res.status(500).json({ detail: ensureError.message });
-
-  const { error: updateError } = await db
-    .from("user_profiles")
-    .update(parsed.update)
-    .eq("user_id", userId);
-  if (updateError)
-    return void res.status(500).json({ detail: updateError.message });
-
-  const { data, error } = await loadProfile(db, userId);
-  if (error) return void res.status(500).json({ detail: error.message });
-  const apiKeyStatus = await getUserApiKeyStatus(userId, db);
-  res.json({ ...data, apiKeyStatus });
+const updateProfileSchema = z.object({
+    display_name: z.string().nullable().optional(),
+    organisation: z.string().nullable().optional(),
+    tabularModel: z.string().optional(),
+    claudeApiKey: z.string().nullable().optional(),
+    geminiApiKey: z.string().nullable().optional(),
+    openaiApiKey: z.string().nullable().optional(),
 });
 
-// GET /user/api-keys
-userRouter.get("/api-keys", requireAuth, async (_req, res) => {
-  const userId = res.locals.userId as string;
-  const db = createServerSupabase();
-  const status = await getUserApiKeyStatus(userId, db);
-  res.json(status);
-});
-
-// PUT /user/api-keys/:provider
-userRouter.put("/api-keys/:provider", requireAuth, async (req, res) => {
-  const userId = res.locals.userId as string;
-  const provider = normalizeApiKeyProvider(req.params.provider);
-  if (!provider)
-    return void res.status(400).json({ detail: "Unsupported provider" });
-
-  const apiKey =
-    typeof req.body?.api_key === "string" ? req.body.api_key : null;
-  const db = createServerSupabase();
-  try {
-    if (hasEnvApiKey(provider)) {
-      return void res.status(409).json({
-        detail:
-          "This provider is configured by the server environment and cannot be changed from the browser.",
-      });
+router.patch("/profile", requireAuth, async (req, res) => {
+    const db = createServerSupabase();
+    const userId = req.user.id;
+    const parsed = updateProfileSchema.safeParse(req.body);
+    if (!parsed.success) {
+        return res.status(400).json({ error: "Invalid request body" });
     }
-    await saveUserApiKey(userId, provider, apiKey, db);
-    const status = await getUserApiKeyStatus(userId, db);
-    res.json(status);
-  } catch (err) {
-    console.error("[user/api-keys] save failed", {
-      provider,
-      error: err instanceof Error ? err.message : String(err),
+    const { display_name, organisation, tabularModel, claudeApiKey, geminiApiKey, openaiApiKey } = parsed.data;
+
+    // First get existing api_keys
+    const { data: existing } = await db
+        .from("user_profiles")
+        .select("api_keys")
+        .eq("user_id", userId)
+        .single();
+
+    const apiKeys = { ...(existing?.api_keys || {}) };
+    if (claudeApiKey !== undefined) apiKeys.claude = claudeApiKey || undefined;
+    if (geminiApiKey !== undefined) apiKeys.gemini = geminiApiKey || undefined;
+    if (openaiApiKey !== undefined) apiKeys.openai = openaiApiKey || undefined;
+
+    const updates: any = {};
+    if (display_name !== undefined) updates.display_name = display_name;
+    if (organisation !== undefined) updates.organisation = organisation;
+    if (tabularModel !== undefined) updates.tabular_model = tabularModel;
+    updates.api_keys = apiKeys;
+
+    const { data: profile, error } = await db
+        .from("user_profiles")
+        .upsert({ user_id: userId, ...updates })
+        .select("display_name, organisation, message_credits_used, credits_reset_date, tier, tabular_model, api_keys")
+        .single();
+
+    if (error) {
+        console.error("Failed to update profile:", error);
+        return res.status(500).json({ error: "Failed to update profile" });
+    }
+
+    const creditsRemaining = 1000 - (profile.message_credits_used ?? 0);
+    const apiKeyStatus = getApiKeyStatus(profile.api_keys);
+
+    res.json({
+        displayName: profile.display_name ?? null,
+        organisation: profile.organisation ?? null,
+        messageCreditsUsed: profile.message_credits_used ?? 0,
+        creditsResetDate: profile.credits_reset_date ?? null,
+        creditsRemaining: creditsRemaining < 0 ? 0 : creditsRemaining,
+        tier: profile.tier ?? "Free",
+        tabularModel: profile.tabular_model ?? "gemini-3-flash-preview",
+        apiKeyStatus,
     });
-    res.status(500).json({ detail: "Failed to save API key" });
-  }
 });
 
 // DELETE /user/account
-userRouter.delete("/account", requireAuth, async (_req, res) => {
-  const userId = res.locals.userId as string;
-  const db = createServerSupabase();
-  const { error } = await db.auth.admin.deleteUser(userId);
-  if (error) return void res.status(500).json({ detail: error.message });
-  res.status(204).send();
+router.delete("/account", requireAuth, async (req, res) => {
+    const db = createServerSupabase();
+    const userId = req.user.id;
+
+    const { error } = await db.auth.admin.deleteUser(userId);
+    if (error) {
+        console.error("Failed to delete user:", error);
+        return res.status(500).json({ error: "Failed to delete account" });
+    }
+    res.status(204).send();
 });
+
+export default router;

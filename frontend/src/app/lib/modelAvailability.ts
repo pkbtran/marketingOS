@@ -1,40 +1,39 @@
-import { MODELS, type ModelOption } from "../components/assistant/ModelToggle";
-import type { ApiKeyState } from "@/app/lib/mikeApi";
+import type { ApiKeyState } from "./mikeApi";
 
-export type ModelProvider = "claude" | "gemini" | "openai";
+export type ModelProvider = "claude" | "gemini" | "openai" | "ollama";
 
-export function getModelProvider(modelId: string): ModelProvider | null {
-    const model = MODELS.find((m) => m.id === modelId);
-    if (!model) return null;
-    return modelGroupToProvider(model.group);
+export function getModelProvider(modelId: string): ModelProvider {
+    if (modelId.startsWith("claude")) return "claude";
+    if (modelId.startsWith("gemini")) return "gemini";
+    if (modelId.startsWith("gpt")) return "openai";
+    if (modelId === "ollama") return "ollama";
+    // custom models – assume they are OpenAI compatible? Let's assume "openai"
+    return "openai";
 }
 
-export function isModelAvailable(
-    modelId: string,
-    apiKeys: ApiKeyState,
-): boolean {
+export function isModelAvailable(modelId: string, apiKeys?: ApiKeyState): boolean {
+    // Custom models (ones not in DEFAULT_MODELS) are assumed available (user is responsible)
+    const isCustomModel = ![
+        "claude-opus-4-7",
+        "claude-sonnet-4-6",
+        "gemini-3.1-pro-preview",
+        "gemini-3-flash-preview",
+        "gpt-5.5",
+        "gpt-5.4-mini",
+        "ollama",
+    ].includes(modelId);
+    if (isCustomModel) return true;
+
+    if (modelId === "ollama") {
+        // For now, always assume Ollama is available.
+        // Later you could add a fetch to http://localhost:11434/api/tags to check.
+        return true;
+    }
+
     const provider = getModelProvider(modelId);
-    if (!provider) return false;
-    return isProviderAvailable(provider, apiKeys);
-}
-
-export function isProviderAvailable(
-    provider: ModelProvider,
-    apiKeys: ApiKeyState,
-): boolean {
-    return !!apiKeys[provider]?.configured;
-}
-
-export function providerLabel(provider: ModelProvider): string {
-    if (provider === "claude") return "Anthropic (Claude)";
-    if (provider === "openai") return "OpenAI";
-    return "Google (Gemini)";
-}
-
-export function modelGroupToProvider(
-    group: ModelOption["group"],
-): ModelProvider {
-    if (group === "Anthropic") return "claude";
-    if (group === "OpenAI") return "openai";
-    return "gemini";
+    if (!apiKeys) return false;
+    if (provider === "claude") return !!apiKeys.claude?.configured;
+    if (provider === "gemini") return !!apiKeys.gemini?.configured;
+    if (provider === "openai") return !!apiKeys.openai?.configured;
+    return false;
 }
